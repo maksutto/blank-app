@@ -45,7 +45,7 @@ def load_data():
 
 
 def plot_top_chart(data, data0dte):
-    fig, ax = plt.subplots(figsize=(12, 6))
+    fig, ax = plt.subplots(figsize=(24, 6))
     
     ax.plot(data.index, data['Close'], label='BTC Price', color='black', linewidth=1.5)
     ax.plot(data.index, data['high'], label='High', color='blue', linestyle='--', alpha=0.7)
@@ -64,7 +64,7 @@ def plot_top_chart(data, data0dte):
 
 
 def plot_bottom_chart(datav):
-    fig, ax = plt.subplots(figsize=(12, 5))
+    fig, ax = plt.subplots(figsize=(24, 5))
 
     #ax.plot(datav.index, datav['puts'], label='Put', color='red', alpha=0.8)
     #ax.plot(datav.index, datav['calls'], label='Call', color='green', alpha=0.8)
@@ -78,7 +78,7 @@ def plot_bottom_chart(datav):
     return fig
 
 def plot_bottom_2_chart(datav2):
-    fig, ax = plt.subplots(figsize=(12, 5))
+    fig, ax = plt.subplots(figsize=(24, 5))
 
     #ax.plot(datav.index, datav['puts'], label='Put', color='red', alpha=0.8)
     #ax.plot(datav.index, datav['calls'], label='Call', color='green', alpha=0.8)
