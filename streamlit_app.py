@@ -17,22 +17,26 @@ def load_data():
     data["date"] = data["date"] - timedelta(hours=3)
     data.index = data["date"]
     data = data[~data.index.duplicated()].bfill()
-
+    data = data[-400:]
+    
     data0dte = pd.read_csv(url_0dte, index_col=0)
     data0dte["date"] = pd.to_datetime(data0dte["date"])
     data0dte["date"] = data0dte["date"] - timedelta(hours=3)
     data0dte.index = data0dte["date"]
     data0dte = data0dte[~data0dte.index.duplicated()].bfill()
-
+    data0dte = data0dte[-400:]
+    
     datav = pd.read_csv(url_v, index_col=0)
     datav["date"] = pd.to_datetime(datav["date"])
     datav.index = datav["date"]
     datav = datav[~datav.index.duplicated()].bfill()
-
+    datav = datav[-400:]
+    
     datav2 = pd.read_csv(url_v_2, index_col=0)
     datav2["date"] = pd.to_datetime(datav2["date"])
     datav2.index = datav2["date"]
     datav2 = datav2[~datav2.index.duplicated()].bfill()
+    datav2 = datav2[-400:]
     
     end_date = datetime.now()
     start_for_btc = data0dte.index[-500] if len(data0dte) >= 400 else data0dte.index[0]
