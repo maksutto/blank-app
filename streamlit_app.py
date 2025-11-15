@@ -72,8 +72,8 @@ def plot_bottom_chart(datav):
 
     #ax.plot(datav.index, datav['puts'], label='Put', color='red', alpha=0.8)
     #ax.plot(datav.index, datav['calls'], label='Call', color='green', alpha=0.8)
-    ax.plot(datav.index, -(datav['calls'] - datav['puts']), label='Net', color='purple', linewidth=1)
-    ax.plot(datav.index, datav['calls'] + datav['puts'], label='Gross', color='orange', linewidth=1, linestyle='--', alpha=1)
+    ax.plot(datav.index, -(datav['calls'] + datav['puts']), label='Net', color='purple', linewidth=1)
+    ax.plot(datav.index, datav['calls'] - datav['puts'], label='Gross', color='orange', linewidth=1, linestyle='--', alpha=1)
     ax.axhline(y=0, color='black', linestyle='-', linewidth=1)
     ax.grid(True, linestyle=':', alpha=0.5)
     ax.set_xticks([])
@@ -86,8 +86,8 @@ def plot_bottom_2_chart(datav2):
 
     #ax.plot(datav.index, datav['puts'], label='Put', color='red', alpha=0.8)
     #ax.plot(datav.index, datav['calls'], label='Call', color='green', alpha=0.8)
-    ax.plot(datav2.index, -(datav2['calls'] - datav2['puts']), label='Net', color='purple', linewidth=2)
-    ax.plot(datav2.index, datav2['calls'] + datav2['puts'], label='Gross', color='orange', linewidth=2, linestyle='--', alpha=1)
+    ax.plot(datav2.index, -(datav2['calls'] + datav2['puts']), label='Net', color='purple', linewidth=2)
+    ax.plot(datav2.index, datav2['calls'] - datav2['puts'], label='Gross', color='orange', linewidth=2, linestyle='--', alpha=1)
     ax.axhline(y=0, color='black', linestyle='-', linewidth=1)
     ax.grid(True, linestyle=':', alpha=0.5)
     ax.set_xticks([])
