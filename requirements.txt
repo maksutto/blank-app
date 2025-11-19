@@ -2,3 +2,4 @@ streamlit
 yfinance
 matplotlib
 streamlit-autorefresh
+yahooquery
