@@ -4,6 +4,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
 from streamlit_autorefresh import st_autorefresh
+from yahooquery import Ticker
+
+
 
 #@st.cache_data(ttl=300)
 def load_data():
@@ -40,9 +43,13 @@ def load_data():
     
     end_date = datetime.now()
     start_for_btc = data0dte.index[-500] if len(data0dte) >= 400 else data0dte.index[0]
-    btc_data = yf.download('BTC-USD', start=start_for_btc, interval='5m', end=end_date)
-    btc_data.columns = btc_data.columns.droplevel(1)
+    tick = Ticker("BTC")
+    btc_data = tick.history(start=start_for_btc, end=end_date, interval='5m')
+    btc_data = btc_data.droplevel(0)
     btc_data.index = btc_data.index.tz_localize(None)
+
+
+
 
     data = pd.concat([data, btc_data['Close']], axis=1).ffill()
     return data, data0dte, datav, btc_data, datav2
