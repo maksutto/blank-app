@@ -3,9 +3,7 @@ import yfinance as yf
 import pandas as pd
 import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
-from streamlit_autorefresh import st_autorefresh
-import binance_data
-
+from streamlit_autorefresh import st_autorefresh 
 
 #@st.cache_data(ttl=300)
 def load_data():
@@ -19,55 +17,35 @@ def load_data():
     data["date"] = data["date"] - timedelta(hours=3)
     data.index = data["date"]
     data = data[~data.index.duplicated()].bfill()
-    data = data[-800:]
-    
+
     data0dte = pd.read_csv(url_0dte, index_col=0)
     data0dte["date"] = pd.to_datetime(data0dte["date"])
     data0dte["date"] = data0dte["date"] - timedelta(hours=3)
     data0dte.index = data0dte["date"]
     data0dte = data0dte[~data0dte.index.duplicated()].bfill()
-    data0dte = data0dte[-800:]
-    
+
     datav = pd.read_csv(url_v, index_col=0)
     datav["date"] = pd.to_datetime(datav["date"])
     datav.index = datav["date"]
     datav = datav[~datav.index.duplicated()].bfill()
-    datav = datav[-800:]
-    
+
     datav2 = pd.read_csv(url_v_2, index_col=0)
     datav2["date"] = pd.to_datetime(datav2["date"])
     datav2.index = datav2["date"]
     datav2 = datav2[~datav2.index.duplicated()].bfill()
-    datav2 = datav2[-800:]
     
-    # end_date = datetime.now()
-    # start_for_btc = data0dte.index[-500] if len(data0dte) >= 400 else data0dte.index[0]
-    # tick = Ticker("BTC")
-    # btc_data = tick.history(start=start_for_btc, end=end_date, interval='5m')
-    # btc_data = btc_data.droplevel(0)
-    # btc_data.index = btc_data.index.tz_localize(None)
+    end_date = datetime.now()
+    start_for_btc = data0dte.index[-500] if len(data0dte) >= 400 else data0dte.index[0]
+    btc_data = yf.download('BTC-USD', start=start_for_btc, interval='5m', end=end_date)
+    btc_data.columns = btc_data.columns.droplevel(1)
+    btc_data.index = btc_data.index.tz_localize(None)
 
-    # end_date = datetime.now()
-    # start_for_btc = data0dte.index[-500] if len(data0dte) >= 400 else data0dte.index[0]
-    # btc_data = yf.download('BTC-USD', start=start_for_btc, interval='5m', end=end_date)
-    # btc_data.columns = btc_data.columns.droplevel(1)
-    # btc_data.index = btc_data.index.tz_localize(None)
-    end = datetime.now()
-    start = end - timedelta(days=7)
-
-    btc_data = binance_data.binance_history(
-        symbol='BTCUSDT',
-        interval='5m',
-        start_time=start,
-        end_time=end
-    )
-    btc_data.index = btc_data['Open time'].tz_localize(None)
     data = pd.concat([data, btc_data['Close']], axis=1).ffill()
     return data, data0dte, datav, btc_data, datav2
 
 
 def plot_top_chart(data, data0dte):
-    fig, ax = plt.subplots(figsize=(24, 6))
+    fig, ax = plt.subplots(figsize=(12, 6))
     
     ax.plot(data.index, data['Close'], label='BTC Price', color='black', linewidth=1.5)
     ax.plot(data.index, data['high'], label='High', color='blue', linestyle='--', alpha=0.7)
@@ -86,12 +64,12 @@ def plot_top_chart(data, data0dte):
 
 
 def plot_bottom_chart(datav):
-    fig, ax = plt.subplots(figsize=(24, 5))
+    fig, ax = plt.subplots(figsize=(12, 5))
 
     #ax.plot(datav.index, datav['puts'], label='Put', color='red', alpha=0.8)
     #ax.plot(datav.index, datav['calls'], label='Call', color='green', alpha=0.8)
-    ax.plot(datav.index, (datav['calls'] + datav['puts']), label='Net', color='purple', linewidth=1)
-    ax.plot(datav.index, -(datav['calls'] - datav['puts']), label='Gross', color='orange', linewidth=1, linestyle='--', alpha=1)
+    ax.plot(datav.index, -(datav['calls'] - datav['puts']), label='Net', color='purple', linewidth=1)
+    ax.plot(datav.index, datav['calls'] + datav['puts'], label='Gross', color='orange', linewidth=1, linestyle='--', alpha=1)
     ax.axhline(y=0, color='black', linestyle='-', linewidth=1)
     ax.grid(True, linestyle=':', alpha=0.5)
     ax.set_xticks([])
@@ -100,12 +78,12 @@ def plot_bottom_chart(datav):
     return fig
 
 def plot_bottom_2_chart(datav2):
-    fig, ax = plt.subplots(figsize=(24, 5))
+    fig, ax = plt.subplots(figsize=(12, 5))
 
     #ax.plot(datav.index, datav['puts'], label='Put', color='red', alpha=0.8)
     #ax.plot(datav.index, datav['calls'], label='Call', color='green', alpha=0.8)
-    ax.plot(datav2.index, (datav2['calls'] + datav2['puts']), label='Net', color='purple', linewidth=2)
-    ax.plot(datav2.index, -(datav2['calls'] - datav2['puts']), label='Gross', color='orange', linewidth=2, linestyle='--', alpha=1)
+    ax.plot(datav2.index, -(datav2['calls'] - datav2['puts']), label='Net', color='purple', linewidth=2)
+    ax.plot(datav2.index, datav2['calls'] + datav2['puts'], label='Gross', color='orange', linewidth=2, linestyle='--', alpha=1)
     ax.axhline(y=0, color='black', linestyle='-', linewidth=1)
     ax.grid(True, linestyle=':', alpha=0.5)
     ax.set_xticks([])
@@ -130,3 +108,4 @@ def main():
     
 if __name__ == "__main__":
     main()
+
