@@ -56,7 +56,7 @@ def load_data():
     end = datetime.now()
     start = end - timedelta(days=7)
 
-    btc_data = fetch_binance_klines_full(
+    btc_data = binance_history(
         symbol='BTCUSDT',
         interval='5m',
         start_time=start,
