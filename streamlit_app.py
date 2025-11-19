@@ -4,7 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
 from streamlit_autorefresh import st_autorefresh 
-
+import binance_data
 #@st.cache_data(ttl=300)
 def load_data():
     url_data = "https://www.dropbox.com/scl/fi/x8igzmtfwbmgt47t6qkl9/btc_data.csv?rlkey=w3j4lhw59ei3dt383st2tqawp&dl=1"
