@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
 from streamlit_autorefresh import st_autorefresh
 from yahooquery import Ticker
-
+from binance_data import binance_history
 
 
 #@st.cache_data(ttl=300)
@@ -48,12 +48,21 @@ def load_data():
     # btc_data = btc_data.droplevel(0)
     # btc_data.index = btc_data.index.tz_localize(None)
 
-    end_date = datetime.now()
-    start_for_btc = data0dte.index[-500] if len(data0dte) >= 400 else data0dte.index[0]
-    btc_data = yf.download('BTC-USD', start=start_for_btc, interval='5m', end=end_date)
-    btc_data.columns = btc_data.columns.droplevel(1)
-    btc_data.index = btc_data.index.tz_localize(None)
-    print(btc_data)
+    # end_date = datetime.now()
+    # start_for_btc = data0dte.index[-500] if len(data0dte) >= 400 else data0dte.index[0]
+    # btc_data = yf.download('BTC-USD', start=start_for_btc, interval='5m', end=end_date)
+    # btc_data.columns = btc_data.columns.droplevel(1)
+    # btc_data.index = btc_data.index.tz_localize(None)
+    end = datetime.now()
+    start = end - timedelta(days=7)
+
+    btc_data = fetch_binance_klines_full(
+        symbol='BTCUSDT',
+        interval='5m',
+        start_time=start,
+        end_time=end
+    )
+    btc_data.index = btc_data['Open time'].tz_localize(None)
     data = pd.concat([data, btc_data['Close']], axis=1).ffill()
     return data, data0dte, datav, btc_data, datav2
 
