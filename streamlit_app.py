@@ -50,7 +50,7 @@ def load_data():
 
     end_date = datetime.now()
     start_for_btc = data0dte.index[-500] if len(data0dte) >= 400 else data0dte.index[0]
-    btc_data = yf.download('BTC', start=start_for_btc, interval='5m', end=end_date)
+    btc_data = yf.download('BTC-USD', start=start_for_btc, interval='5m', end=end_date)
     btc_data.columns = btc_data.columns.droplevel(1)
     btc_data.index = btc_data.index.tz_localize(None)
     print(btc_data)
