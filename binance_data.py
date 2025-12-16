@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 
 def binance_history(
     symbol='BTCUSDT',
-    interval='5m',
+    interval='15m',
     start_time=None,
     end_time=None,
     limit=1000):
