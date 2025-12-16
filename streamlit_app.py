@@ -4,13 +4,13 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
 from streamlit_autorefresh import st_autorefresh 
-from binance_data import binance_history
+import binance_data 
 #@st.cache_data(ttl=300)
 
 def load_data():
     end = datetime.now()
     start = end - timedelta(days=18)
-    stock = binance_history(
+    stock = binance_data.binance_history(
         symbol='BTCUSDT',
         interval='1h',
         start_time=start,
