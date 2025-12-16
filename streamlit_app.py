@@ -4,21 +4,10 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
 from streamlit_autorefresh import st_autorefresh 
-import binance_data 
-import requests
+import binance_data
 #@st.cache_data(ttl=300)
-
 def load_data():
-    end = datetime.now()
-    start = end - timedelta(days=18)
-    stock = binance_data.binance_history(
-        symbol='BTCUSDT',
-        interval='1h',
-        start_time=start,
-        end_time=end)
-    stock.index = stock['Open time']
-
-    url_data = "https://www.dropbox.com/scl/fi/x8igzmtfwbmgt47t6qkl9/btc_data.csv?rlkey=w3j4lhw59ei3dt383st2tqawp&dl=1"
+    url_data = "https://www.dropbox.com/scl/fi/rpup6hom4g9moof8uz29m/btc_data_ExpAll.csv?rlkey=dc3rfst7oikq3rbmd9ew9trhr&st=477qt485&dl=1"
     url_0dte = "https://www.dropbox.com/scl/fi/mcanpcslmq1zf2q7z5ls8/btc_data_Exp0.csv?rlkey=pojk0kmmamvt0y1xldljtijpd&dl=1"
     url_v = "https://www.dropbox.com/scl/fi/2wlhuv0lr46b9rv4eqf4m/btc_data_v_Exp0.csv?rlkey=qqg5czbp5d7k60hoafn756xrc&st=5dvxmvp5&dl=1"
     url_v_2 = "https://www.dropbox.com/scl/fi/k8y01j4mgyam5e4sx0oh6/btc_data_v_Exp1.csv?rlkey=6n0zui60w5q95p1abb1yrbc9u&st=e5sqjbwx&dl=1"                
@@ -44,17 +33,21 @@ def load_data():
     datav2["date"] = pd.to_datetime(datav2["date"])
     datav2.index = datav2["date"]
     datav2 = datav2[~datav2.index.duplicated()].bfill()
-    
-    
-    stock.index = stock.index.tz_localize(None)
 
-    data = pd.concat([data, stock['Close']], axis=1).ffill()
+    end_date = datetime.now()
+    start_for_btc = data0dte.index[-500] if len(data0dte) >= 400 else data0dte.index[0]
+    start_for_btc = data0dte.index[max(-500, -len(data0dte))]
+    btc_data = yf.download('BTC-USD', start=start_for_btc, interval='5m', end=end_date)
+    btc_data.columns = btc_data.columns.droplevel(1)
+    btc_data.index = btc_data.index.tz_localize(None)
+
+    data = pd.concat([data, btc_data['Close']], axis=1).ffill()
     return data, data0dte, datav, btc_data, datav2
 
 
 def plot_top_chart(data, data0dte):
     fig, ax = plt.subplots(figsize=(12, 6))
-    
+
     ax.plot(data.index, data['Close'], label='BTC Price', color='black', linewidth=1.5)
     ax.plot(data.index, data['high'], label='High', color='blue', linestyle='--', alpha=0.7)
     ax.plot(data.index, data['low'], label='Low', color='blue', linestyle='--', alpha=0.7)
@@ -98,7 +91,7 @@ def plot_bottom_2_chart(datav2):
     ax.set_yticks([])
     fig.autofmt_xdate()
     return fig
-    
+
 def main():
     st_autorefresh(interval=600000, key="datarefresh")
     with st.spinner("Загрузка данных..."):
@@ -113,7 +106,6 @@ def main():
 
     fig3 = plot_bottom_2_chart(datav2)
     st.pyplot(fig3)
-    
+
 if __name__ == "__main__":
     main()
-
