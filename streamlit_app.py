@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
 from streamlit_autorefresh import st_autorefresh 
 import binance_data 
+import requests
 #@st.cache_data(ttl=300)
 
 def load_data():
