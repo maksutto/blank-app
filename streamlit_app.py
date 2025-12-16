@@ -8,7 +8,7 @@ from binance_data import binance_history
 #@st.cache_data(ttl=300)
 
 def load_data():
-end = datetime.now()
+    end = datetime.now()
     start = end - timedelta(days=18)
     stock = binance_history(
         symbol='BTCUSDT',
