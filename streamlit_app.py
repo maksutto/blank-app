@@ -4,9 +4,19 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
 from streamlit_autorefresh import st_autorefresh 
-import binance_data
+from binance_data import binance_history
 #@st.cache_data(ttl=300)
+
 def load_data():
+end = datetime.now()
+    start = end - timedelta(days=18)
+    stock = binance_history(
+        symbol='BTCUSDT',
+        interval='1h',
+        start_time=start,
+        end_time=end)
+    stock.index = stock['Open time']
+
     url_data = "https://www.dropbox.com/scl/fi/x8igzmtfwbmgt47t6qkl9/btc_data.csv?rlkey=w3j4lhw59ei3dt383st2tqawp&dl=1"
     url_0dte = "https://www.dropbox.com/scl/fi/mcanpcslmq1zf2q7z5ls8/btc_data_Exp0.csv?rlkey=pojk0kmmamvt0y1xldljtijpd&dl=1"
     url_v = "https://www.dropbox.com/scl/fi/2wlhuv0lr46b9rv4eqf4m/btc_data_v_Exp0.csv?rlkey=qqg5czbp5d7k60hoafn756xrc&st=5dvxmvp5&dl=1"
@@ -34,13 +44,10 @@ def load_data():
     datav2.index = datav2["date"]
     datav2 = datav2[~datav2.index.duplicated()].bfill()
     
-    end_date = datetime.now()
-    start_for_btc = data0dte.index[max(-500, -len(data0dte))]
-    btc_data = yf.download('BTC-USD', start=start_for_btc, interval='5m', end=end_date)
-    btc_data.columns = btc_data.columns.droplevel(1)
-    btc_data.index = btc_data.index.tz_localize(None)
+    
+    stock.index = stock.index.tz_localize(None)
 
-    data = pd.concat([data, btc_data['Close']], axis=1).ffill()
+    data = pd.concat([data, stock['Close']], axis=1).ffill()
     return data, data0dte, datav, btc_data, datav2
 
 
