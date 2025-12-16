@@ -9,8 +9,8 @@ import requests
 #@st.cache_data(ttl=300)
 
 def load_data():
-    end = datetime.now()
-    start = end - timedelta(days=18)
+    end = '2025-11-10'
+    start = '2025-11-16'
     stock = binance_data.binance_history(
         symbol='BTCUSDT',
         interval='1h',
